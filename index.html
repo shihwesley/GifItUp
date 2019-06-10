@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>CoderBay</title>
+
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Bootstrap CDN-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <style>
+    </style>
+
+</head>
+
+<body>
+<div class='buttons' style="display:inline-block;">
+
+</div>
+
+<form id ="adding">
+    <input type="text" name="add_topics"><br>
+    <input type="submit" value="Submit">
+</form>
+
+&nbsp;
+<br>
+
+<div id="images">
+</div>
+
+<script type="text/javascript">
+    var topics = ['Avengers', 'Iron Man', 'Thor', 'Doctor Strange', 'Thanos', 'Loki', 'Infinity Stones', 'Vision', 'Black Panther', 'scarlet witch'];
+    $(":submit").click(function (event) {
+        event.preventDefault();
+        var new_topic = $(":text").val();
+        render(new_topic);
+        clicking();
+    });
+
+    function render(string) {
+        $('.buttons').append("<button>"+ string + "</button>");
+        $('.buttons').append('&nbsp;');
+        $(':button').attr('type', 'button');
+        $(':button').addClass("btn btn-primary");
+    }
+
+    for (let i = 0; i < topics.length; i++) {
+        $('.buttons').append("<button>"+ topics[i] + "</button>");
+        $('.buttons').append('&nbsp;');
+        $(':button').attr('type', 'button');
+        $(':button').addClass("btn btn-primary");
+    }
+    function clicking() {
+        $(":button").click(function() {
+            const term = $(this).text();
+            var queryURL = `http://api.giphy.com/v1/gifs/search?q=${term}&api_key=UndLb0k6OOok1Zbs4fLDllEBQhIhlNhz`;
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }) .then(function(response) {
+                console.log(response);
+                var results = response.data;
+                var animation_url = '';
+
+                for (var i = 0; i < results.length; i++) {
+                    var gifDiv = $("<div>");
+
+                    var rating = results[i].rating;
+
+                    var gif_Image = $("<img> Rating: " + rating + "</img>");
+                    still_url = results[i].images.fixed_width_still.url;
+                    gif_Image.attr("src", still_url);
+                    animation_url = results[i].images.fixed_width.url;
+                    gif_Image.attr("data-animate", animation_url);
+                    gif_Image.attr("data-still", still_url);
+                    gif_Image.attr("data-state", "still");
+                    gif_Image.attr("alt", term);
+                    gif_Image.addClass("gif");
+
+                    gifDiv.prepend(gif_Image);
+
+                    $("#images").prepend(gif_Image);
+                }
+
+                $('img').click(function() {
+                    const animate = $(this).attr("data-animate");
+                    const still = $(this).attr("data-still");
+                    if($(this).attr('data-state') === 'still') {
+                        $(this).attr("src", animate);
+                        $(this).attr("data-state", "animate");
+                    } else {
+                        $(this).attr("src", still);
+                        $(this).attr("data-state", "still");
+                    }
+
+                });
+
+            })
+        });
+    }
+    clicking();
+
+
+
+
+
+
+</script>
+
+</body>
