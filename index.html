@@ -59,7 +59,7 @@
     function clicking() {
         $(":button").click(function() {
             const term = $(this).text();
-            var queryURL = `http://api.giphy.com/v1/gifs/search?q=${term}&api_key=UndLb0k6OOok1Zbs4fLDllEBQhIhlNhz`;
+            var queryURL = `https://api.giphy.com/v1/gifs/search?q=${term}&api_key=UndLb0k6OOok1Zbs4fLDllEBQhIhlNhz`;
             $.ajax({
                 url: queryURL,
                 method: "GET"
@@ -106,11 +106,7 @@
     }
     clicking();
 
-
-
-
-
-
+    
 </script>
 
 </body>
